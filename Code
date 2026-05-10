@@ -1,0 +1,50 @@
+interface RegularUser { 
+    type: 'user'; 
+    name: string; 
+    age: number; 
+    occupation: string; 
+} 
+
+interface SuperAdmin { 
+    type: 'admin'; 
+    name: string; 
+    age: number; 
+    role: string; 
+} 
+
+export type Person = RegularUser | SuperAdmin; 
+
+export const people: Person[] = [ 
+    { type: 'user', name: 'Max Millian', age: 25, occupation: 'Teacher' }, 
+    { type: 'admin', name: 'Mr Gabriel', age: 32, role: 'Administrator' }, 
+    { type: 'user', name: 'Ade Solomon', age: 23, occupation: 'Accountant' }, 
+    { type: 'admin', name: 'Brian John', age: 64, role: 'Dentist' }, 
+    { type: 'user', name: 'Wilson Harrison', age: 23, occupation: 'Footballer' }, 
+    { type: 'admin', name: 'Agent Smith', age: 23, role: 'Electrical Engineer' } 
+]; 
+
+export function showPerson(person: Person) { 
+    console.log( 
+        ` -> ${person.name}, ${person.age}, ${person.type === 'admin' ? person.role : person.occupation}` 
+    ); 
+} 
+
+export function filterPeople(list: Person[], kind: string, criteria: unknown): unknown[] { 
+    return list
+        .filter((p) => p.type === kind) 
+        .filter((p) => { 
+            let keys = Object.keys(criteria) as (keyof Person)[]; 
+            return keys.every((field) => p[field] === criteria[field]); 
+        }); 
+} 
+
+export const usersAge23 = filterPeople(people, 'user', { age: 23 }); 
+export const adminsAge23 = filterPeople(people, 'admin', { age: 23 }); 
+
+console.log('Users aged 23:'); 
+usersAge23.forEach(showPerson); 
+
+console.log(); 
+
+console.log('Admins aged 23:'); 
+adminsAge23.forEach(showPerson)
